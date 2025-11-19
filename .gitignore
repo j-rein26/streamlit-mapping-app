@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Streamlit
+.streamlit/
+
+# Environments
+.env
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
