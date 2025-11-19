@@ -75,6 +75,16 @@ sheet_url = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/gviz/tq?tq
 # -------------------------
 df = pd.read_csv(sheet_url)
 
+# 🔥 Clean whitespace
+df = df.apply(lambda col: col.astype(str).str.strip() if col.dtype == "object" else col)
+
+# 🔥 Remove empty rows (Google Sheets often exports these)
+df = df.dropna(how="all")
+
+# 🔥 Remove rows where Address is blank
+df = df[df["Address"].notna() & (df["Address"].str.strip() != "")]
+
+
 # Drop duplicate addresses
 df = df.drop_duplicates(subset=["Address", "City", "State", "Zip"])
 
