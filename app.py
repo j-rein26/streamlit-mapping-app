@@ -4,6 +4,7 @@ import folium
 from streamlit_folium import st_folium
 
 
+
 # ----- SECURE PASSWORD PROTECTION (uses Streamlit Secrets) -----
 
 def check_password():
@@ -49,7 +50,8 @@ st.title("Address Map Viewer")
 # -------------------------
 # 1. CONFIGURE MONTHS HERE
 # -------------------------
-SPREADSHEET_ID = "1vh_AysiakVEnUYZxE2YuYOFSt6MJGLXaqPcT4heJMMA"
+
+SPREADSHEET_ID = st.secrets["Spreadsheet_id"]
 
 MONTH_SHEETS = {
     "September": 0,            # Replace with actual gid
