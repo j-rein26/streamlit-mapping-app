@@ -99,16 +99,28 @@ df = df.dropna(subset=["Latitude", "Longitude"])
 st.sidebar.header("Filters")
 
 cities = sorted(df["City"].dropna().unique())
-selected_city = st.sidebar.multiselect("City", cities, default=cities)
 
-visited_choice = st.sidebar.selectbox("Visited?", ["All", "Yes", "No"])
+selected_city = st.sidebar.multiselect("City", cities, default=cities)
 
 filtered = df[df["City"].isin(selected_city)]
 
-if visited_choice == "Yes":
-    filtered = filtered[filtered["Visited By"].notna()]
-elif visited_choice == "No":
-    filtered = filtered[filtered["Visited By"].isna()]
+# Build a list of unique visitors
+visitor_names = sorted(
+    [v for v in df["Visited By"].dropna().unique() if str(v).strip() != ""]
+)
+
+visited_choice = st.sidebar.selectbox(
+    "Visited?",
+    ["All", "Not Visited"] + visitor_names
+)
+
+
+if visited_choice == "Not Visited":
+    filtered = filtered[filtered["Visited By"].isna() | (filtered["Visited By"].str.strip() == "")]
+elif visited_choice != "All":
+    # Show only locations visited by the selected person
+    filtered = filtered[filtered["Visited By"].str.contains(visited_choice, na=False)]
+
 
 # -------------------------
 # 5. CREATE MAP
