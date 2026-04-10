@@ -6,8 +6,7 @@ from streamlit_folium import st_folium
 
 
 # ----- Soft Login -----
-user_name = soft_login()
-st.sidebar.success(f"Logged in as: {user_name}")
+
 
 def soft_login():
     if "user_name" not in st.session_state:
@@ -29,7 +28,8 @@ def soft_login():
     return st.session_state.user_name
 
 # ----- END Soft Login -----
-
+user_name = soft_login()
+st.sidebar.success(f"Logged in as: {user_name}")
 
 
 st.title("Address Map Viewer")
