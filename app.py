@@ -126,10 +126,13 @@ else:
     m = folium.Map(location=[avg_lat, avg_lon], zoom_start=11)
 
     for _, row in filtered.iterrows():
+        address = f"{row['Address']}, {row['City']}, {row['State']} {row['Zip']}"
+        maps_link = f"https://www.google.com/maps/dir/?api=1&destination={row['Latitude']},{row['Longitude']}"
+
         popup = f"""
-        {row['First']} {row['Last']}<br>
-        {row['Address']}<br>
-        {row['City']}, {row['State']} {row['Zip']}
+        <b>{row['First']} {row['Last']}</b><br>
+        {address}<br><br>
+        <a href="{maps_link}" target="_blank">🚗 Navigate</a>
         """
         folium.Marker(
             [row["Latitude"], row["Longitude"]],
