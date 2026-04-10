@@ -129,7 +129,7 @@ else:
         address = f"{row['Address']}, {row['City']}, {row['State']} {row['Zip']}"
         maps_link = f"https://www.google.com/maps/dir/?api=1&destination={row['Latitude']},{row['Longitude']}"
 
-       popup = f"""
+        popup = f"""
         <b>{row['First']} {row['Last']}</b><br>
         {address}<br><br>
         <a href="{maps_link}" target="_blank" style="font-size:16px;">
