@@ -8,24 +8,23 @@ from streamlit_folium import st_folium
 # ----- SECURE PASSWORD PROTECTION (uses Streamlit Secrets) -----
 
 def check_password():
-    """Returns True if the user entered the correct password."""
-
-    # The password is stored securely in Streamlit Cloud → Settings → Secrets
     correct_password = st.secrets["app_password"]
 
-    def password_entered():
-        # Check whether entered password is correct
-        if st.session_state["password"] == correct_password:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]  # Don't store the password
-        else:
-            st.session_state["password_correct"] = False
-
-    # First run, show password input
     if "password_correct" not in st.session_state:
-        st.text_input("Enter password:", type="password",
-                      on_change=password_entered, key="password")
-        return False
+        st.session_state.password_correct = False
+
+    if not st.session_state.password_correct:
+        password = st.text_input("Enter password:", type="password")
+
+        if st.button("Login"):
+            if password == correct_password:
+                st.session_state.password_correct = True
+                st.rerun()
+            else:
+                st.error("Incorrect password")
+        st.stop()
+
+    return True
 
     # Password is wrong
     elif not st.session_state["password_correct"]:
