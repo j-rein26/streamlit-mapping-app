@@ -5,32 +5,30 @@ from streamlit_folium import st_folium
 
 
 
-# ----- SECURE PASSWORD PROTECTION (uses Streamlit Secrets) -----
+# ----- Soft Login -----
+user_name = soft_login()
+st.sidebar.success(f"Logged in as: {user_name}")
 
-def check_password():
-    correct_password = st.secrets["app_password"]
+def soft_login():
+    if "user_name" not in st.session_state:
+        st.session_state.user_name = None
 
-    if "password_correct" not in st.session_state:
-        st.session_state.password_correct = False
+    if st.session_state.user_name is None:
+        st.title("Welcome 👋")
 
-    if not st.session_state.password_correct:
-        password = st.text_input("Enter password:", type="password")
+        name = st.text_input("Enter your name to continue:")
 
-        if st.button("Login"):
-            if password == correct_password:
-                st.session_state.password_correct = True
+        if st.button("Continue"):
+            if name.strip():
+                st.session_state.user_name = name.strip()
                 st.rerun()
             else:
-                st.error("Incorrect password")
+                st.warning("Please enter a name.")
         st.stop()
 
-    return True
+    return st.session_state.user_name
 
-
-if not check_password():
-    st.stop()
-
-# ----- END PASSWORD PROTECTION -----
+# ----- END Soft Login -----
 
 
 
