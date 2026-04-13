@@ -31,6 +31,10 @@ def soft_login():
 user_name = soft_login()
 st.sidebar.success(f"Logged in as: {user_name}")
 
+# 🔥 Set default filter ONCE
+if "visited_filter" not in st.session_state:
+    st.session_state.visited_filter = user_name
+
 
 st.title("Address Map Viewer")
 
@@ -95,18 +99,30 @@ visitor_names = sorted(
     [v for v in df["Visited By"].dropna().unique() if str(v).strip() != ""]
 )
 
+options = ["All", "Not Visited"] + visitor_names
+
 visited_choice = st.sidebar.selectbox(
     "Visited?",
-    ["All", "Not Visited"] + visitor_names
+    options,
+    index=options.index(st.session_state.visited_filter)
+    if st.session_state.visited_filter in options else 0,
+    key="visited_filter"
 )
 
 
 if visited_choice == "Not Visited":
-    filtered = filtered[filtered["Visited By"].isna() | (filtered["Visited By"].str.strip() == "")]
+    filtered = filtered[
+        filtered["Visited By"].isna() |
+        (filtered["Visited By"].str.strip() == "")
+    ]
 elif visited_choice != "All":
-    # Show only locations visited by the selected person
-    filtered = filtered[filtered["Visited By"].str.contains(visited_choice, na=False)]
+    filtered = filtered[
+        filtered["Visited By"].str.strip() == visited_choice
+    ]
 
+if st.sidebar.button("Show All"):
+    st.session_state.visited_filter = "All"
+    st.rerun()
 
 # -------------------------
 # 5. CREATE MAP
